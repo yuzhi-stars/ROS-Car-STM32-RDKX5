@@ -1,0 +1,4 @@
+# N10 / CH9102: 按当前设备实际 USB ID 核对后安装。TTY 名可能为 ttyACM*, ttyCH343USB* 等。
+# 若存在多个相同 VID/PID 设备，请补充 ATTRS{serial} 或稳定物理路径条件，否则别名可能冲突。
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="55d4", MODE="0660", GROUP="dialout", SYMLINK+="wheeltec_lidar"
+# 旧源码中还出现 CP2102 10c4:ea60 规则；只有实测实际使用 CP2102 时再单独启用。

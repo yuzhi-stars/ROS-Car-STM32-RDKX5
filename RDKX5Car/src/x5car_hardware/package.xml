@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>x5car_hardware</name><version>0.1.0</version>
+  <description>Linux UART ros2_control system interface for the RDK X5 mecanum robot</description>
+  <maintainer email="robotwzz@example.com">robotwzz</maintainer><license>Apache-2.0</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>hardware_interface</depend><depend>pluginlib</depend>
+  <depend>rclcpp</depend><depend>rclcpp_lifecycle</depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

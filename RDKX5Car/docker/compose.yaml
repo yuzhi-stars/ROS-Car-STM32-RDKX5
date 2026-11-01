@@ -1,0 +1,32 @@
+# 仅用于受信任的 Ubuntu Linux 开发电脑。全特权 + 主机网络 + /dev 直通风险等同高度宿主访问。
+# 优先使用从旧容器 docker commit/save 导出的已验证镜像。
+services:
+  x5car:
+    image: x5car-humble:verified
+    container_name: x5car_dev
+    hostname: x5car-dev
+    privileged: true
+    network_mode: host
+    ipc: host
+    # 实测：privileged=true、network=host、ipc=host；整目录设备绑定实现动态插拔。
+    # /dev 不是 --device=/dev/ttyACM0 等静态映射，设备重枚举后容器可见新节点。
+    # /run/udev 暴露宿主 udev 数据库，供 libudev / 相机 SDK 设备枚举使用。
+    # udev 规则仍应配置在真正插入 USB 的 Linux 宿主机（PC 或 RDK）。
+    # 严格复刻原机的 RW 挂载；经设备测试后可评估将 /run/udev 改只读。
+    # privileged + 全 /dev 具有极高安全风险，仅可信专用实验机使用。
+    volumes:
+      - ${HOST_WS:?Set HOST_WS in .env}:/root/ecust_ws:rw
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /dev:/dev:rw
+      - /run/udev:/run/udev:rw
+    environment:
+      - DISPLAY=${DISPLAY:?Run from graphical desktop, set DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - ROS_DOMAIN_ID=1
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - ROS_LOCALHOST_ONLY=0
+    working_dir: /root/ecust_ws
+    stdin_open: true
+    tty: true
+    command: ["bash", "-lc", "sleep infinity"]
+    restart: unless-stopped

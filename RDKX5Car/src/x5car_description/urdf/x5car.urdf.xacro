@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="x5car">
+  <xacro:arg name="geometry_file" default="$(find x5car_description)/config/robot.yaml"/>
+  <xacro:arg name="hardware_file" default="$(find x5car_bringup)/config/hardware.yaml"/>
+  <xacro:arg name="use_mock_hardware" default="false"/>
+  <xacro:property name="robot_config" value="${xacro.load_yaml('$(arg geometry_file)')}"/>
+  <xacro:property name="g" value="${robot_config['geometry']}"/>
+  <xacro:property name="mounts" value="${robot_config['mounts']}"/>
+  <xacro:property name="hw" value="${xacro.load_yaml('$(arg hardware_file)')}"/>
+  <material name="blue"><color rgba="0.12 0.35 0.65 1"/></material>
+  <material name="black"><color rgba="0.12 0.12 0.12 1"/></material>
+  <!-- base_link 位于底盘中心的地面投影，EKF 是 odom->base_link 的唯一发布者。 -->
+  <link name="base_link"/>
+  <link name="body_link">
+    <visual><geometry><box size="${g['body_length']} ${g['body_width']} ${g['body_height']}"/></geometry><material name="blue"/></visual>
+    <collision><geometry><box size="${g['body_length']} ${g['body_width']} ${g['body_height']}"/></geometry></collision>
+    <inertial><mass value="${g['body_mass']}"/><inertia ixx="${g['body_mass']*(g['body_width']**2+g['body_height']**2)/12}" iyy="${g['body_mass']*(g['body_length']**2+g['body_height']**2)/12}" izz="${g['body_mass']*(g['body_length']**2+g['body_width']**2)/12}" ixy="0" ixz="0" iyz="0"/></inertial>
+  </link>
+  <joint name="body_fixed" type="fixed"><parent link="base_link"/><child link="body_link"/><origin xyz="0 0 ${g['body_center_z']}"/></joint>
+  <!-- 几何圆柱只表示轮子外形，非物理麦轮接触仿真。正转轴统一 +Y。 -->
+  <xacro:macro name="wheel" params="prefix x y">
+    <link name="${prefix}_wheel_link">
+      <visual><origin rpy="${pi/2} 0 0"/><geometry><cylinder radius="${g['wheel_radius']}" length="${g['wheel_width']}"/></geometry><material name="black"/></visual>
+      <collision><origin rpy="${pi/2} 0 0"/><geometry><cylinder radius="${g['wheel_radius']}" length="${g['wheel_width']}"/></geometry></collision>
+      <inertial><mass value="${g['wheel_mass']}"/><inertia ixx="${g['wheel_mass']*(3*g['wheel_radius']**2+g['wheel_width']**2)/12}" iyy="${g['wheel_mass']*g['wheel_radius']**2/2}" izz="${g['wheel_mass']*(3*g['wheel_radius']**2+g['wheel_width']**2)/12}" ixy="0" ixz="0" iyz="0"/></inertial>
+    </link>
+    <joint name="${prefix}_wheel_joint" type="continuous"><parent link="base_link"/><child link="${prefix}_wheel_link"/><origin xyz="${x} ${y} ${g['wheel_radius']}"/><axis xyz="0 1 0"/><limit effort="${g['wheel_effort_limit']}" velocity="${g['wheel_velocity_limit']}"/></joint>
+  </xacro:macro>
+  <xacro:wheel prefix="front_left" x="${g['half_wheelbase']}" y="${g['half_track']}"/>
+  <xacro:wheel prefix="front_right" x="${g['half_wheelbase']}" y="${-g['half_track']}"/>
+  <xacro:wheel prefix="rear_left" x="${-g['half_wheelbase']}" y="${g['half_track']}"/>
+  <xacro:wheel prefix="rear_right" x="${-g['half_wheelbase']}" y="${-g['half_track']}"/>
+  <xacro:macro name="mount" params="name values">
+    <link name="${name}"/>
+    <joint name="${name}_fixed" type="fixed"><parent link="base_link"/><child link="${name}"/><origin xyz="${values['x']} ${values['y']} ${values['z']}" rpy="${values['roll']} ${values['pitch']} ${values['yaw']}"/></joint>
+  </xacro:macro>
+  <xacro:mount name="imu_link" values="${mounts['imu']}"/>
+  <xacro:mount name="laser" values="${mounts['laser']}"/>
+  <!-- 相机驱动负责 camera_link 下的光学 TF，URDF 只负责安装外参，避免重复。 -->
+  <xacro:mount name="camera_link" values="${mounts['camera']}"/>
+  <ros2_control name="X5CarSystem" type="system">
+    <hardware>
+      <xacro:if value="$(arg use_mock_hardware)"><plugin>mock_components/GenericSystem</plugin></xacro:if>
+      <xacro:unless value="$(arg use_mock_hardware)"><plugin>x5car_hardware/X5CarSystem</plugin></xacro:unless>
+      <param name="serial_port">${hw['serial_port']}</param>
+      <param name="max_wheel_speed_rad_s">${hw['max_wheel_speed_rad_s']}</param>
+      <param name="stopped_threshold_rad_s">${hw['stopped_threshold_rad_s']}</param>
+      <param name="feedback_timeout_ms">${hw['feedback_timeout_ms']}</param>
+      <param name="activate_timeout_ms">${hw['activate_timeout_ms']}</param>
+      <param name="stop_timeout_ms">${hw['stop_timeout_ms']}</param>
+      <param name="require_imu">${hw['require_imu']}</param>
+      <param name="imu_sensor_name">imu</param>
+      <param name="fl_joint">front_left_wheel_joint</param><param name="fr_joint">front_right_wheel_joint</param>
+      <param name="rl_joint">rear_left_wheel_joint</param><param name="rr_joint">rear_right_wheel_joint</param>
+    </hardware>
+    <xacro:macro name="controlled_wheel" params="name">
+      <joint name="${name}_wheel_joint"><command_interface name="velocity"/><state_interface name="position"><param name="initial_value">0.0</param></state_interface><state_interface name="velocity"><param name="initial_value">0.0</param></state_interface></joint>
+    </xacro:macro>
+    <xacro:controlled_wheel name="front_left"/><xacro:controlled_wheel name="front_right"/>
+    <xacro:controlled_wheel name="rear_left"/><xacro:controlled_wheel name="rear_right"/>
+    <sensor name="imu">
+      <state_interface name="orientation.x"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="orientation.y"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="orientation.z"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="orientation.w"><param name="initial_value">1.0</param></state_interface>
+      <state_interface name="angular_velocity.x"/><state_interface name="angular_velocity.y"/><state_interface name="angular_velocity.z"/>
+      <state_interface name="linear_acceleration.x"/><state_interface name="linear_acceleration.y"/>
+      <state_interface name="linear_acceleration.z"><param name="initial_value">9.81</param></state_interface>
+    </sensor>
+  </ros2_control>
+</robot>

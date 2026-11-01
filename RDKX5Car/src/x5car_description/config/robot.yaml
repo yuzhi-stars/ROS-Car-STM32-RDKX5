@@ -1,0 +1,39 @@
+# 单位 m/rad/kg；轮半径、轴距/轮距已按 2026-10-28 用户提供尺寸更新，其余尺寸仍需确认。
+# 本文件是 URDF、控制器轮径/轮距、Nav2 footprint 的共同几何来源。
+# 坐标原点 base_link：四个轮中心组成矩形的中心，在地面的投影。
+# x 向前、y 向左、z 向上；这里的 m 不是 cm，角度 rad 不是度。
+geometry:
+  # 轮轴中心到滚动外缘/地面的有效半径，不是直径；建议在承载状态测量。
+  # 用于车体速度<->轮轴角速度换算、轮式里程计、轮轴离地高度和模型外廓。
+  wheel_radius: 0.040    # 已确认轮半径 40 mm（直径 80 mm）
+  # 沿轮轴方向从轮子一侧到另一侧的宽度；对应 URDF 圆柱的 length（几何上的高）。
+  # 圆柱在模型中转向后沿车体左右方向展开，此数值不是离地高度或轮径。
+  wheel_width: 0.035    # 待测：仍是示例轮宽
+  # 完整前后轮中心距/2；前轮 x=+此值，后轮 x=-此值。
+  half_wheelbase: 0.0835  # 前后轮轴中心距 0.167 m 的一半
+  # 完整左右轮中心距/2；左轮 y=+此值，右轮 y=-此值，不是轮胎内/外侧间隙。
+  half_track: 0.094      # 左右轮中心距 0.188 m 的一半
+  # 以下车体尺寸/质量仍是示例。车体简化为一个 x/y 居中的箱体，轮子另建圆柱。
+  # length/width 为箱体沿前后/左右的外尺寸；导航取车体与轮子的最大包络。
+  body_length: 0.20
+  body_width: 0.14
+  # 箱体自身上下方向的厚度，不是整车最高点距地高度。
+  body_height: 0.12
+  # 地面到箱体几何中心的高度；箱底高度=此值-body_height/2。
+  body_center_z: 0.12
+  # 箱体/归并到车体的载荷质量，不含单独建模的四个车轮，单位 kg。
+  body_mass: 4.0
+  # 一个车轮的质量，四轮各自使用这个值，不是四个轮子的总质量，单位 kg。
+  wheel_mass: 0.2
+  # 轮关节 <limit>，仅用于 URDF 描述与 rviz 等工具，不参与 ros2_control 限幅（实车限速看 hardware.yaml 的 max_wheel_speed_rad_s）。
+  wheel_velocity_limit: 20.0  # rad/s：单轮轴角速度；不是车体 m/s
+  wheel_effort_limit: 5.0     # N·m：单轮轴力矩；不是 PWM 或电流
+# 固定安装外参：目标传感器 link 的坐标原点相对于 base_link 的位置和方向。
+# x/y/z 单位 m；z 从地面量起，不是从车体顶板量起。
+# roll/pitch/yaw 单位 rad，按右手规则绕 x/y/z；90度=pi/2，不能直接填90。
+# imu->imu_link；laser->laser；camera->camera_link。均为待测示例。
+# 相机 optical frame 由驱动发布；这里不是给 IMU 动态姿态赋值。
+mounts:
+  imu: {x: 0.0, y: 0.0, z: 0.12, roll: 0.0, pitch: 0.0, yaw: 0.0}
+  laser: {x: 0.10, y: 0.0, z: 0.23, roll: 0.0, pitch: 0.0, yaw: 0.0}
+  camera: {x: 0.17, y: 0.0, z: 0.22, roll: 0.0, pitch: 0.0, yaw: 0.0}

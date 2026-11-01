@@ -1,0 +1,9 @@
+# Keep the bundled SDK files directly in Git for a complete normal clone.
+# Original upstream LFS attributes remain in archives/WORKSPACE_SRC.tar.gz.
+* -filter -merge
+*.so binary
+*.so.* binary
+*.pdf binary
+*.gz binary
+*.stl binary
+*.dae binary

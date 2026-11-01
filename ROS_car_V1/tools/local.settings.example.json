@@ -1,0 +1,8 @@
+{
+    "armGccBin": "C:/Tools/ArmGNU/bin",
+    "makeBin": "C:/Tools/mingw64/bin",
+    "cmakeExe": "C:/Program Files/CMake/bin/cmake.exe",
+    "openocdExe": "C:/Tools/xpack-openocd/bin/openocd.exe",
+    "openocdScripts": "C:/Tools/xpack-openocd/openocd/scripts",
+    "swdSpeedKhz": 100
+}

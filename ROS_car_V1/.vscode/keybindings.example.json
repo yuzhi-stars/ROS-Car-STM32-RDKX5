@@ -1,0 +1,8 @@
+[
+    {
+        "key": "f8",
+        "command": "workbench.action.tasks.runTask",
+        "args": "Flash DAPLink OpenOCD",
+        "when": "!inDebugMode"
+    }
+]

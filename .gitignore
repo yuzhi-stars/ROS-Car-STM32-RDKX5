@@ -1,0 +1,29 @@
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+# Generated ROS workspaces and firmware artifacts
+build/
+install/
+log/
+dist/
+archive/
+*.o
+*.obj
+*.elf
+*.axf
+*.map
+*.crf
+*.uvguix.*
+ROS_car_V1/tools/local.settings.json
+ROS_car_V1/.vscode/launch.json
+ROS_car_V1/.vscode/c_cpp_properties.json
+ROS_car_V1/CMakeUserPresets.json
+# Verified Docker images belong in release assets, not Git history.
+X5CAR_DOCKER_IMAGE.tar.gz*

@@ -1,0 +1,30 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 50
+    joint_state_broadcaster: {type: joint_state_broadcaster/JointStateBroadcaster}
+    imu_sensor_broadcaster: {type: imu_sensor_broadcaster/IMUSensorBroadcaster}
+    mecanum_controller: {type: mecanum_drive_controller/MecanumDriveController}
+mecanum_controller:
+  ros__parameters:
+    front_left_wheel_command_joint_name: front_left_wheel_joint
+    front_right_wheel_command_joint_name: front_right_wheel_joint
+    rear_left_wheel_command_joint_name: rear_left_wheel_joint
+    rear_right_wheel_command_joint_name: rear_right_wheel_joint
+    # 轮径和 lx+ly 在 hardware.launch.py 中从 robot.yaml 写入，不维护第二份。
+    reference_timeout: 0.2
+    # 本项目速度链路统一 geometry_msgs/msg/Twist，必须使用 reference_unstamped。
+    # true 会切换到 reference / TwistStamped，不能仅修改话题名来兼容 Nav2。
+    use_stamped_vel: false
+    base_frame_id: base_link
+    odom_frame_id: odom
+    enable_odom_tf: true
+    pose_covariance_diagonal: [0.05, 0.05, 1000000.0, 1000000.0, 1000000.0, 0.1]
+    twist_covariance_diagonal: [0.02, 0.04, 1000000.0, 1000000.0, 1000000.0, 0.05]
+imu_sensor_broadcaster:
+  ros__parameters:
+    sensor_name: imu
+    frame_id: imu_link
+    # 以下噪声仅为初值，按 IMU 静态实测结果修改；不可全设 0 当作无噪声。
+    static_covariance_orientation: [0.01, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.1]
+    static_covariance_angular_velocity: [0.0025, 0.0, 0.0, 0.0, 0.0025, 0.0, 0.0, 0.0, 0.0025]
+    static_covariance_linear_acceleration: [0.04, 0.0, 0.0, 0.0, 0.04, 0.0, 0.0, 0.0, 0.04]

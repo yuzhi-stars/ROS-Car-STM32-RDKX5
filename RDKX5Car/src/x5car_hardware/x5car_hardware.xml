@@ -1,0 +1,6 @@
+<library path="x5car_hardware">
+  <class name="x5car_hardware/X5CarSystem" type="x5car_hardware::X5CarSystem"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>Four wheel velocity and IMU feedback over a single 115200 UART.</description>
+  </class>
+</library>

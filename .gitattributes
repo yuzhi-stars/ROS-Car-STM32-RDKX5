@@ -1,0 +1,17 @@
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.yaml text eol=lf
+*.ps1 text eol=crlf
+*.tar.gz binary
+*.zip binary
+*.epro binary
+*.SLDPRT binary
+*.stp binary
+*.STL binary
+*.3mf binary
+*.png binary
+*.jpg binary
+*.pdf binary
+*.so binary

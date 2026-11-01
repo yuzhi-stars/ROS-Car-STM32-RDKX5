@@ -1,0 +1,10 @@
+# 下位机只通过本硬件插件访问；不要填雷达的 UART。
+serial_port: /dev/ttyUSB0
+# 真实上限尚未确认，0 会使真实硬件 on_init 失败，防止把示例值当作实车值。
+# 根据电机和减速比填写轮轴 rad/s，必须与 MCU 限制一致。mock 模式不使用此值。
+max_wheel_speed_rad_s: 100
+stopped_threshold_rad_s: 0.05
+feedback_timeout_ms: 200
+activate_timeout_ms: 3000
+stop_timeout_ms: 500
+require_imu: 'true'

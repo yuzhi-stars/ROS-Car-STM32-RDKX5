@@ -1,0 +1,16 @@
+container=x5car_dev
+image=x5car-humble:verified
+workspace=/home/luca/ecust_ws
+base_image=x5car_humble:dev privileged=true network=host ipc=host
+mount: bind /dev -> /dev rw= true propagation= rprivate
+mount: bind /home/luca/ecust_ws -> /root/ecust_ws rw= true propagation= rprivate
+mount: bind /run/udev -> /run/udev rw= false propagation= rprivate
+mount: bind /tmp/.X11-unix -> /tmp/.X11-unix rw= true propagation= rprivate
+
+
+QT_X11_NO_MITSHM=1
+ROS_DOMAIN_ID=1
+RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+ROS_LOCALHOST_ONLY=0
+DISPLAY=:1
+note=未保存全部环境变量以防泄露凭据；需单独移交 xhost 授权命令。

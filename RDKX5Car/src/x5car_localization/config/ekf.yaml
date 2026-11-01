@@ -1,0 +1,27 @@
+ekf_filter_node:
+  ros__parameters:
+    frequency: 50.0
+    sensor_timeout: 0.2
+    two_d_mode: true
+    publish_tf: true
+    print_diagnostics: true
+    map_frame: map
+    odom_frame: odom
+    base_link_frame: base_link
+    world_frame: odom
+    transform_time_offset: 0.0
+    transform_timeout: 0.05
+    odom0: /wheel/odometry
+    # 顺序 x y z roll pitch yaw vx vy vz vroll vpitch vyaw ax ay az
+    # 只融合轮速对应的 twist，不重复融合由同一轮速积分出的 pose。
+    odom0_config: [false, false, false, false, false, false,
+                   true, true, false, false, false, true, false, false, false]
+    odom0_queue_size: 5
+    odom0_differential: false
+    imu0: /imu/data
+    # 六轴 IMU 的绝对 yaw 不可观，默认仅融合 gz；保留三轴加速度供观察。
+    imu0_config: [false, false, false, false, false, false,
+                 false, false, false, false, false, true, false, false, false]
+    imu0_queue_size: 5
+    imu0_differential: false
+    imu0_remove_gravitational_acceleration: false
