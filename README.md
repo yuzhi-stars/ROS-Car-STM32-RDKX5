@@ -44,7 +44,7 @@ colcon build --symlink-install --parallel-workers 1
 source install/setup.bash
 ```
 
-连接实车前，按教程核对 MCU 串口、实际轮速上限、轮径、轮距、轴距及传感器参数。原始 Docker 镜像未通过完整性校验，本次未发布；电脑容器的重建命令见[发布说明](docs/RELEASE.md)。
+连接实车前，按教程核对 MCU 串口、实际轮速上限、轮径、轮距、轴距及传感器参数。电脑 x86_64 Docker 镜像已通过 SHA-256、gzip、镜像层完整性、Docker 导入和基础 ROS 运行检查，并以三个分片发布到 [v1.0.0 Release](https://github.com/goatwzz/ROS-Car-STM32-RDKX5/releases/tag/v1.0.0)；下载、合并与校验步骤见[发布说明](docs/RELEASE.md)。
 
 ## 项目组成
 

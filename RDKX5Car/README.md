@@ -1,6 +1,6 @@
 # RDKx5 小车部署资料
 
-> 公开版：ROS 2 源码已展开至 [src/](src/README.md)。原始 Docker 镜像校验失败，未发布；电脑端按[容器重建说明](../docs/RELEASE.md)部署，原文镜像导入步骤需待重新导出有效镜像后使用。
+> 公开版：ROS 2 源码已展开至 [src/](src/README.md)。电脑 x86_64 Docker 镜像已校验通过并补充到 [v1.0.0 Release](https://github.com/goatwzz/ROS-Car-STM32-RDKX5/releases/tag/v1.0.0)，下载三个分片后按[下载与校验说明](../docs/RELEASE.md)合并、校验并导入。
 
 本目录集中保存 RDKx5 小车的部署归档、配置、脚本和操作文档。板卡为 Ubuntu 22.04 / ROS 2 Humble / ARM64；电脑使用 x86_64 Humble Docker。
 
@@ -31,7 +31,7 @@ RDKX5Car/
 
 ## 部署归档校验
 
-源码已包含在 `archives/WORKSPACE_SRC.tar.gz`，可运行 `sha256sum -c SHA256SUMS` 校验。`src/` 是相同源码的展开副本。原始 Docker 镜像未通过校验，公开版使用[重建说明](../docs/RELEASE.md)。
+源码已包含在 `archives/WORKSPACE_SRC.tar.gz`，可运行 `sha256sum -c SHA256SUMS` 校验。`src/` 是相同源码的展开副本。Docker 镜像分片位于 GitHub Release，不包含在 Git 源码下载中。按[镜像下载与校验说明](../docs/RELEASE.md)获取全部分片，分别校验分片和合并后的完整文件，再导入 Docker。
 
 ## 配置与脚本
 

@@ -1,0 +1,23 @@
+{
+  "archive": "X5CAR_DOCKER_IMAGE.tar.gz",
+  "bytes": 2987007758,
+  "sha256": "1c9354745bb0d209e7efc3dd0edf051d965235fc9a9777bfcbe30c9b0ae6eef6",
+  "architecture": "linux/amd64",
+  "tag": "x5car-humble:verified",
+  "image_id": "sha256:a5f4f2f6df2a1a65f71d59e04e6a68a9ac33700963de39325bc207e4476a73a7",
+  "blobs_verified": 16,
+  "layers": 14,
+  "checks": {
+    "historical_sha256": "PASS",
+    "gzip_crc_and_length": "PASS",
+    "tar_parse": "PASS",
+    "all_blob_sha256": "PASS",
+    "oci_descriptor_sizes_and_digests": "PASS",
+    "docker_load": "PASS",
+    "isolated_container_ros_packages": "PASS: nav2_bringup, slam_toolbox, controller_manager, mecanum_drive_controller, robot_localization, rmw_cyclonedds_cpp, rviz2",
+    "rclpy_node_lifecycle": "PASS",
+    "split_reassembly_sha256": "PASS"
+  },
+  "checked_date": "2026-11-01 Asia/Shanghai",
+  "limitations": "No physical robot, RDK ARM64, GUI display or DDS between separate hosts was tested."
+}

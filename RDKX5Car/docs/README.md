@@ -8,4 +8,4 @@
 
 2A 与 2B 是不同运行链路，按说明切换。首次配置、编译需要执行相应的环境加载；自动加载验收通过后，日常终端可以直接运行 ROS 命令，RViz 只输入 `rviz2`。
 
-部署文件位置以[根目录入口](../README.md)为准。源码和镜像在 `../archives/`，配置和脚本在根目录对应子目录。原始材料保存在 [reference](reference/README.md)。
+部署文件位置以[根目录入口](../README.md)为准。源码归档在 `../archives/`；电脑 Docker 镜像需从 GitHub Release 下载三个分片，按[发布说明](../../docs/RELEASE.md)合并校验后放入该目录。配置和脚本在根目录对应子目录。原始材料保存在 [reference](reference/README.md)。
